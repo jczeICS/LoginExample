@@ -60,7 +60,7 @@ export class UsersService {
 
   async refreshTokens(refreshToken: string) {
     try {
-      const user = this.jwtSvc.verify(refreshToken, { secret: 'your_jwt_refresh_secret_key' });
+      const user = this.jwtSvc.verify(refreshToken, { secret: process.env.SECRET_kEY_JWT_REFRESH });
       const playLoad = { email: user.email, sub: user._id };
       const { access_token, refresh_token } = await this.generateJwtToken(playLoad);
       return { access_token, refresh_token, status: 200, message: 'token refreshed successfully' };
@@ -75,11 +75,11 @@ export class UsersService {
     };
     const [acceess_token, refresh_token] = await Promise.all([
       this.jwtSvc.signAsync(jwtplayload, {
-        secret: 'your_jwt_secret_key',
+        secret: process.env.SECRET_KEY_JWT_CREATE,
         expiresIn: '1h',
       }),
       this.jwtSvc.signAsync(jwtplayload, {
-        secret: 'your_jwt_refresh_secret_key',
+        secret: process.env.SECRET_kEY_JWT_REFRESH,
         expiresIn: '1d',
       }),
     ])
